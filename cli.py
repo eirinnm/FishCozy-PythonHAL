@@ -1,4 +1,4 @@
-import PythonHAL
+from FishCozyHAL import FishCozyHAL
 import kbhit
 import sys, os
 
@@ -11,8 +11,7 @@ preset_temperatures = 33, 28, 4
 kb = kbhit.KBHit()
 
 try:
-    board = PythonHAL.Mainboard(None, 6)
-    # board = Mainboard('COM3', 6)
+    board = FishCozyHAL.Mainboard()
     board.connect()
 
     while True:

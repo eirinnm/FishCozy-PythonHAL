@@ -1,6 +1,0 @@
-[submodule "pyserial"]
-	path = pyserial
-	url = https://github.com/pyserial/pyserial.git
-[submodule "dummyserial"]
-	path = dummyserial
-	url = https://github.com/ampledata/dummyserial.git
