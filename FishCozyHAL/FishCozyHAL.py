@@ -48,6 +48,7 @@ class Chamber:
         self.temperature += distance_to_setpoint * 0.01
         if abs(distance_to_setpoint)>=1:
             self.power = distance_to_setpoint * 50
+            self.power = min(max(self.power, -255),255)
         else:
             self.power = 0    
         # add some noise
