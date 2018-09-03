@@ -5,7 +5,7 @@ import sys, os
 commands = ['qaz', 'wsx', 'edc', 'rfv', 'tgb', 'yhn']
 # each group of letters corresponds to a chamber
 # and each of the 3 letters corresponds to a temperature
-preset_temperatures = 33, 28, 4
+preset_temperatures = 37, 28, 4
 
 
 kb = kbhit.KBHit()

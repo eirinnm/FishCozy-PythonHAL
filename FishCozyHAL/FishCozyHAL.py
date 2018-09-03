@@ -46,6 +46,10 @@ class Chamber:
         # move a small fraction of the distance to the setpoint
         distance_to_setpoint = self.setpoint - self.temperature 
         self.temperature += distance_to_setpoint * 0.01
+        if abs(distance_to_setpoint)>=1:
+            self.power = distance_to_setpoint * 50
+        else:
+            self.power = 0    
         # add some noise
         self.temperature += random.gauss(0, 0.05)
 

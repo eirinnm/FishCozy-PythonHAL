@@ -1,0 +1,8 @@
+setup.py
+FishCozyHAL/FishCozyHAL.py
+FishCozyHAL/__init__.py
+FishCozyHAL.egg-info/PKG-INFO
+FishCozyHAL.egg-info/SOURCES.txt
+FishCozyHAL.egg-info/dependency_links.txt
+FishCozyHAL.egg-info/requires.txt
+FishCozyHAL.egg-info/top_level.txt
