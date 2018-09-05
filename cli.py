@@ -1,7 +1,12 @@
 from FishCozyHAL import FishCozyHAL
 import kbhit
 import sys, os
-
+if len(sys.argv)<2:
+    print("Usage: cli.py serial_port\nSerial_port can be 'auto', or 'false' for a simulation")
+    sys.exit()
+port = sys.argv[1]
+if port == 'auto': port = None
+if port == 'false': port = False 
 commands = ['qaz', 'wsx', 'edc', 'rfv', 'tgb', 'yhn']
 # each group of letters corresponds to a chamber
 # and each of the 3 letters corresponds to a temperature
@@ -11,7 +16,7 @@ preset_temperatures = 37, 28, 4
 kb = kbhit.KBHit()
 
 try:
-    board = FishCozyHAL.Mainboard()
+    board = FishCozyHAL.Mainboard(port=port)
     board.connect()
 
     while True:
