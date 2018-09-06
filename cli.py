@@ -1,6 +1,6 @@
 from FishCozyHAL import FishCozyHAL
 import kbhit
-import sys, os
+import sys, os, time
 if len(sys.argv)<2:
     print("Usage: cli.py serial_port\nSerial_port can be 'auto', or 'false' for a simulation")
     sys.exit()
@@ -20,8 +20,12 @@ try:
     board.connect()
 
     while True:
-        board.refresh()
-        print(board.chambers)
+        try:
+            board.refresh()
+            print(board.chambers)
+            # time.sleep(0.1)
+        except TimeoutError:
+            print("Timeout")
         if kb.kbhit():
             c = kb.getch()
             if ord(c) == 27:  # ESC
@@ -32,7 +36,7 @@ try:
                     if c in codes:
                         temp = preset_temperatures[codes.index(c)]
                         board.chambers[idx].setpoint = temp
-                        print("Setting chamber", idx, "to", temp)
+
 
 
         

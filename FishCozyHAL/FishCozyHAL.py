@@ -39,7 +39,7 @@ class Chamber:
     def update_from_string(self, text):
         temp, setpoint, power = text.split()
         self.temperature = float(temp)
-        self.setpoint = float(setpoint)
+        self._setpoint = float(setpoint)
         self.power = float(power)
 
     def mock(self):  # simulate some data
@@ -69,6 +69,8 @@ class ReadLine:  # found here https://github.com/pyserial/pyserial/issues/216
         while True:
             i = max(1, min(2048, self.s.in_waiting))
             data = self.s.read(i)
+            if not data:
+                raise TimeoutError
             i = data.find(b"\n")
             if i >= 0:
                 r = self.buf + data[:i+1]
@@ -95,6 +97,7 @@ class Mainboard:  ## Main class to be instantiated by the user
 
     def _setchamber(self, idx, value):
         ## Send the string to update a chamber's setpoint
+        print("Setting chamber", idx, "to", value)
         if self.ser:
             self.ser.write(('S %s %0.2f\n' % (idx, value)).encode())
 
@@ -115,18 +118,22 @@ class Mainboard:  ## Main class to be instantiated by the user
             errorcount = 0
             while errorcount < 3:
                 try:
-                    line = reader.readline()
-                    chamber_parts = line.decode(encoding='ascii').strip().split('\t')
-                    if len(chamber_parts) == len(self.chambers):
-                        for chamber, text in zip(self.chambers, chamber_parts):
-                            chamber.update_from_string(text)
-                        break
+                    line = reader.readline().decode(encoding='ascii').strip()
+                    if line.startswith("Command"):
+                        print(line)
                     else:
-                        errorcount += 1
+                        chamber_parts = line.split('\t')
+                        if len(chamber_parts) == len(self.chambers):
+                            for chamber, text in zip(self.chambers, chamber_parts):
+                                chamber.update_from_string(text)
+                            break
+                        else:
+                            errorcount += 1
+                            print("Unable to read line: '%s'" % line)
                 except UnicodeDecodeError:
                     errorcount += 1
             else:
-                print("Unable to read line")
+                print("Unable to read line: '%s'" % line)
         else: ## Mocking when there's no connection
             for chamber in self.chambers:
                 chamber.mock()
