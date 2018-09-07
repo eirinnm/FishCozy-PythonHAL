@@ -33,8 +33,9 @@ class Chamber:
 
     @setpoint.setter
     def setpoint(self, value):
-        self._setpoint = value
-        self._board._setchamber(self._idx, self._setpoint)  # Call the board function to send the command
+        if value != self._setpoint:
+            self._setpoint = value
+            self._board._setchamber(self._idx, self._setpoint)  # Call the board function to send the command
 
     def update_from_string(self, text):
         temp, setpoint, power = text.split()
