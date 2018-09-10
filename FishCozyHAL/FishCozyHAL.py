@@ -117,24 +117,21 @@ class Mainboard:  ## Main class to be instantiated by the user
         if self.ser:
             reader = ReadLine(self.ser)
             errorcount = 0
-            while errorcount < 3:
-                try:
-                    line = reader.readline().decode(encoding='ascii').strip()
-                    if line.startswith("Command"):
-                        print(line)
+            try:
+                line = reader.readline().decode(encoding='ascii').strip()
+                if line.startswith("Command"):
+                    print(line)
+                else:
+                    chamber_parts = line.split('\t')
+                    if len(chamber_parts) == len(self.chambers):
+                        for chamber, text in zip(self.chambers, chamber_parts):
+                            chamber.update_from_string(text)
                     else:
-                        chamber_parts = line.split('\t')
-                        if len(chamber_parts) == len(self.chambers):
-                            for chamber, text in zip(self.chambers, chamber_parts):
-                                chamber.update_from_string(text)
-                            break
-                        else:
-                            errorcount += 1
-                            print("Unable to read line: '%s'" % line)
-                except UnicodeDecodeError:
-                    errorcount += 1
-            else:
+                        errorcount += 1
+                        print("Unable to read line: '%s'" % line)
+            except (UnicodeDecodeError, TimeoutError):
                 print("Unable to read line: '%s'" % line)
+                #raise
         else: ## Mocking when there's no connection
             for chamber in self.chambers:
                 chamber.mock()
