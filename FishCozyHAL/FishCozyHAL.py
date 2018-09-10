@@ -118,6 +118,7 @@ class Mainboard:  ## Main class to be instantiated by the user
             reader = ReadLine(self.ser)
             errorcount = 0
             try:
+                line = 'null'
                 line = reader.readline().decode(encoding='ascii').strip()
                 if line.startswith("Command"):
                     print(line)
