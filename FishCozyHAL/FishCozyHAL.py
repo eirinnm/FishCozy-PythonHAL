@@ -38,10 +38,14 @@ class Chamber:
             self._board._setchamber(self._idx, self._setpoint)  # Call the board function to send the command
 
     def update_from_string(self, text):
-        temp, setpoint, power = text.split()
-        self.temperature = float(temp)
-        self._setpoint = float(setpoint)
-        self.power = float(power)
+        try:
+            temp, setpoint, power = text.split()
+            self.temperature = float(temp)
+            self._setpoint = float(setpoint)
+            self.power = float(power)
+        except:
+            print("Error deciphering block:", text)
+            raise
 
     def mock(self):  # simulate some data
         # move a small fraction of the distance to the setpoint
@@ -116,6 +120,7 @@ class Mainboard:  ## Main class to be instantiated by the user
     def refresh(self):
         if self.ser:
             reader = ReadLine(self.ser)
+            reader.readline() #read a full line so we can start the next line in sync
             errorcount = 0
             try:
                 line = 'null'
